@@ -1,6 +1,5 @@
 use crate::{
     package::{find_ememnu_package_files, find_qr_package_files, get_packages_by_files, Package},
-    util::read_json,
     Command,
 };
 use anyhow::Result;
