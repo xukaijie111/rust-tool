@@ -54,7 +54,6 @@ impl LinkCommand {
             pkg.iteral_all().for_each(|dep|  {
                 for src_pkg in src_packages.clone() {
                     if src_pkg.name == dep.name {
-                        println!("equal name is {:?}",dep.name);
                         res.push(MatchPackage {
                             src : src_pkg.path.clone(),
                             target:dep.path.clone()
