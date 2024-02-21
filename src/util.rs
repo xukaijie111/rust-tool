@@ -1,7 +1,7 @@
 use anyhow::Result;
 use serde::de::DeserializeOwned;
 use std::{
-    fs::{self, read_link, read_to_string, remove_file},
+    fs::{self, read_to_string},
     os::unix::fs::symlink,
     path::PathBuf,
 };
@@ -17,7 +17,6 @@ pub fn read_json<T: DeserializeOwned>(path: &PathBuf) -> Result<T> {
 }
 
 pub fn link(src: &PathBuf, target: &PathBuf) -> Result<()> {
-
     match (target.exists(), target.is_dir()) {
         (true, true) => std::fs::remove_dir_all(&target)?,
         (true, false) => std::fs::remove_file(&target)?,

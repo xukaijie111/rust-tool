@@ -55,7 +55,7 @@ pub struct Package {
     pub name: String,
     pub dependencies: BTreeMap<String, String>,
     pub dev_dependencies: BTreeMap<String, String>,
-    pub miniprogram:String,
+    pub miniprogram: String,
     pub path: PathBuf,
 }
 

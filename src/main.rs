@@ -19,7 +19,6 @@ pub struct Command {
 }
 
 fn main() -> Result<()> {
-
     let command: Command = Command::parse();
 
     match command.command {
