@@ -1,5 +1,5 @@
 use anyhow::Result;
-use clap::builder::Str;
+use clap::Parser;
 use glob::glob;
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, path::PathBuf};
@@ -43,9 +43,42 @@ pub fn get_packages_by_files(dirs: &Vec<PathBuf>) -> Vec<Package> {
         .collect()
 }
 
+
+
+#[derive(Parser, Clone, Debug)]
+pub struct ListTarget {
+    pub name:String,
+    pub path:PathBuf
+}
+
+pub fn get_npm_path(packages:&Vec<Package>,dir:&str)->Result<Vec<ListTarget>> {
+
+    let mut res = vec![];
+    for ele in packages {
+        let npms :Vec<DepReq>= ele.iteral_all().map(|p| {
+            return p.clone();
+        }).collect();
+        for ele in npms {
+            let name = &ele.name;
+            let mut path = ele.path.clone().parent().unwrap().to_path_buf();
+            path.push(dir);
+            path.push(name);
+            res.push(ListTarget {
+                name:name.clone(),
+                path
+            })
+        }
+        
+    }
+
+    Ok(res)
+}
+
+
 #[derive(Clone, Debug)]
 pub struct DepReq {
     pub name: String,
+    /// package.json的地址
     pub path: PathBuf,
 }
 #[derive(Serialize, Deserialize, Clone, PartialEq, Eq, Debug, Default)]
@@ -56,6 +89,7 @@ pub struct Package {
     pub dependencies: BTreeMap<String, String>,
     pub dev_dependencies: BTreeMap<String, String>,
     pub miniprogram: String,
+    /// package.json的文件地址
     pub path: PathBuf,
 }
 

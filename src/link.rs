@@ -4,7 +4,7 @@ use crate::{
     Command,
 };
 use anyhow::Result;
-use clap::{builder::Str, Parser};
+use clap::Parser;
 use std::{env::current_dir, path::PathBuf};
 
 use std::fmt::Debug;
@@ -38,19 +38,19 @@ pub struct LinkCommand {
     pub target: Option<PathBuf>,
 }
 
+
+
+
 impl LinkCommand {
-
-    pub fn get_default_value(dir:Option<PathBuf>) -> PathBuf {
-
+    pub fn get_default_value(dir: Option<PathBuf>) -> PathBuf {
         if dir.is_none() {
             return current_dir().unwrap();
-        }else {
+        } else {
             return dir.unwrap();
         }
     }
     pub fn run(command: &Command, options: &LinkCommand) -> Result<()> {
         let LinkCommand { source, target } = options.to_owned();
-
 
         let src_path = Self::get_default_value(source);
         let target_path = Self::get_default_value(target);
