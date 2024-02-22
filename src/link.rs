@@ -36,6 +36,9 @@ pub struct LinkCommand {
     /// the target diretory. qr-mini-pay
     #[arg(long, short)]
     pub target: Option<PathBuf>,
+
+    #[arg(long, short)]
+    pub weixin: bool
 }
 
 
@@ -50,7 +53,8 @@ impl LinkCommand {
         }
     }
     pub fn run(command: &Command, options: &LinkCommand) -> Result<()> {
-        let LinkCommand { source, target } = options.to_owned();
+        let LinkCommand { source, target,weixin } = options.to_owned();
+
 
         let src_path = Self::get_default_value(source);
         let target_path = Self::get_default_value(target);
@@ -65,12 +69,20 @@ impl LinkCommand {
 
         let match_lists =
             Self::find_match_packages(&src_package_files, &target_package_files).unwrap();
+            let  mut match_miniprogram_lists = vec![];
+            let  mut match_node_modules_lists = vec![];
 
-        let match_node_modules_lists = Self::find_match_node_modules(&match_lists).unwrap();
-        let match_miniprogram_lists = Self::find_match_miniprogram(&match_lists).unwrap();
+        if weixin {
+             match_miniprogram_lists = Self::find_match_miniprogram(&match_lists).unwrap();
+            Self::link_match_lists(&match_miniprogram_lists).unwrap();
+        }else {
 
-        Self::link_match_lists(&match_node_modules_lists).unwrap();
-        Self::link_match_lists(&match_miniprogram_lists).unwrap();
+             match_node_modules_lists = Self::find_match_node_modules(&match_lists).unwrap();
+            Self::link_match_lists(&match_node_modules_lists).unwrap();
+           
+        }
+
+       
 
         Self::print_result(&match_node_modules_lists, &match_miniprogram_lists);
 
